@@ -1,0 +1,45 @@
+version: "3"
+services:
+  web:
+    image: nginx:1.25.2-alpine3.18
+    ports:
+      - "8888:80"
+    volumes:
+      - ./app:/app
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - php
+    networks:
+      - slimphp-net
+    restart: always
+  php:
+    build:
+      context: .
+      dockerfile: PHP.Dockerfile
+    volumes:
+      - ./app:/app
+    depends_on:
+      - mysql
+    networks:
+      - slimphp-net
+    restart: always
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "St*k*b*dh1."
+      MYSQL_USER: "zaki"
+      MYSQL_PASSWORD: "St*k*b*dh1."
+      MYSQL_DATABASE: "slim_auth"
+    volumes:
+      - slimphp:/var/lib/mysql
+    ports:
+      - "3310:3306"
+    networks:
+      - slimphp-net
+    restart: always
+
+networks:
+  slimphp-net:
+
+volumes:
+  slimphp: {}
