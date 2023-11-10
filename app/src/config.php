@@ -1,6 +1,7 @@
 <?php
 
-class Config {
+class Config
+{
     private $dbSettings;
     private $errorSettings;
 
@@ -13,9 +14,19 @@ class Config {
             "password" => "St*k*b*dh1.",
             "driver" => "pdo_mysql",
         ];
+        $this->errorSettings = [
+            "displayErrorDetails" => true,
+            "logErrors" => true,
+            "logErrorDetails" => true,
+        ];
     }
 
-    public function getDbSettings() {
+    public function getDbSettings()
+    {
         return $this->dbSettings;
+    }
+    public function getErrorSttings()
+    {
+        return $this->errorSettings;
     }
 }

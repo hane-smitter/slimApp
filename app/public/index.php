@@ -16,6 +16,14 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 
 // $app = SlimAppBridge::create($container);
+$app->addRoutingMiddleware();
+
+$errorSettings = $container->get("Config")->getErrorSttings();
+$errorMiddleware = $app->addErrorMiddleware(
+    $errorSettings["displayErrorDetails"],
+    $errorSettings["logErrors"],
+    $errorSettings["logErrorDetails"],
+);
 
 // Routes
 require_once __DIR__ . "/../routes/api.php";
