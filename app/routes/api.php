@@ -5,6 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . "/../middlewares/jsonBodyParser.php";
 require_once __DIR__ . "/../middlewares/authentication.php";
+require_once __DIR__ . "/../middlewares/dataValidation.php";
 
 
 // 1. Home
@@ -24,7 +25,6 @@ $app->get("/players", function (Request $request, Response $response) {
     // Doctrine used as Database Abstraction Layer(DBAL)
     $queryBuilder = $this->get("DB")->getQueryBuilder();
     $queryBuilder->select("id", "name", "team", "category")->from("players");
-
 
     $results = $queryBuilder->executeQuery()->fetchAllAssociative(); // to return the result as an array
 
@@ -63,7 +63,7 @@ $app->post("/player/add", function (Request $request, Response $response) {
 
     $response->getBody()->write(json_encode($results));
     return $response->withHeader("Content-Type", "application/json");
-})->add($jsonBodyParser)->add($authentication);
+})->add($jsonBodyParser)->add($dataValidation)->add($authentication);
 
 // 5. Update a player
 $app->put("/player/{id}", function (Request $request, Response $response, array $args) {
@@ -84,7 +84,7 @@ $app->put("/player/{id}", function (Request $request, Response $response, array 
         $response->getBody()->write(json_encode($results));
 
         return $response->withHeader("Content-Type", "application/json");
-})->add($jsonBodyParser)->add($authentication);
+})->add($dataValidation)->add($jsonBodyParser)->add($authentication);
 
 // 6. Delete a player
 $app->delete("/player/{id}", function(Request $request, Response $response, array $args) {

@@ -1,7 +1,6 @@
 <?php
 
 use Psr\Http\Message\ServerRequestInterface as Request;
-// use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as ReqHandler;
 use Slim\Psr7\Response;
 
@@ -23,18 +22,20 @@ $authentication = function (Request $request, ReqHandler $handler) {
     $result = $queryBuilder->executeQuery()->fetchAssociative();
 
     if (!$result) {
-        sendErrorResponse(["msg" => "No such user"]);
+        return sendErrorResponse(["msg" => "No such user"]);
     }
 
     if (array_key_exists("apikey", $result)) {
         $hashedApiKey = $result["apikey"];
     } else {
-        sendErrorResponse(["msg" => "username does not exist"]);
+        return sendErrorResponse(["msg" => "username does not exist"]);
     }
 
+    $passMatch = password_verify($apiKey, $hashedApiKey);
+    // var_dump(["apiKey" => $apiKey, "hashedApiKey" => $hashedApiKey, "equality" => $passMatch, "Opp.equality" => !$passMatch]);
 
-    if (!password_verify($apiKey, $hashedApiKey)) {
-        sendErrorResponse([
+    if (!$passMatch) {
+        return sendErrorResponse([
             "msg" => "Invalid Api Key"
         ]);
     }
@@ -43,12 +44,12 @@ $authentication = function (Request $request, ReqHandler $handler) {
     return $response;
 };
 
-function sendErrorResponse(array $error)
+function sendErrorResponse(array $error, int $status = 401)
 {
     $response = new Response();
     $response->getBody()->write(json_encode($error));
 
-    $failureResponse = $response->withHeader("Content-Type", "application/json")->withStatus((401));
+    $failureResponse = $response->withHeader("Content-Type", "application/json")->withStatus(($status));
 
     return $failureResponse;
 };
