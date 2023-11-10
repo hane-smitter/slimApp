@@ -8,14 +8,14 @@ class Config
     public function __construct()
     {
         $this->dbSettings = [
-            "dbname" => "slim_auth",
-            "user" => "zaki",
-            "host" => "mysql",
-            "password" => "St*k*b*dh1.",
-            "driver" => "pdo_mysql",
+            "dbname" => $_ENV["DB_NAME"],
+            "user" => $_ENV["DB_USER"],
+            "host" => $_ENV["DB_HOST"],
+            "password" => $_ENV["DB_PASSWORD"],
+            "driver" => $_ENV["DB_DRIVER"],
         ];
         $this->errorSettings = [
-            "displayErrorDetails" => true,
+            "displayErrorDetails" => $_ENV["APP_DEBUG"] === "development",
             "logErrors" => true,
             "logErrorDetails" => true,
         ];

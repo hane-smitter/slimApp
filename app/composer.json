@@ -5,5 +5,8 @@
         "doctrine/dbal": "^3.7",
         "php-di/slim-bridge": "^3.4",
         "justinrainbow/json-schema": "^5.2"
+    },
+    "require-dev": {
+        "symfony/dotenv": "^5.4"
     }
 }

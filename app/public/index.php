@@ -1,11 +1,15 @@
 <?php
 
+use Symfony\Component\Dotenv\Dotenv;
 use DI\Container;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use DI\Bridge\Slim\Bridge as SlimAppBridge;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ . "/../.env");
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->addDefinitions(__DIR__ . "/../src/definitions.php");
